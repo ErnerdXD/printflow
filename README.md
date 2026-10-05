@@ -27,6 +27,19 @@ A small local PDF print queue for campus or shop counters. Customers upload one 
 
 For phones on the same Wi-Fi, the app must be bound to the computer's LAN address and Windows Firewall must allow port 8787. This app is intended for a trusted local network; do not expose it directly to the public internet without authentication and HTTPS.
 
+## Moving to a real domain
+
+The included launcher is for local use only. To use a domain such as `print.example.com`, manually change the deployment setup rather than only changing the browser URL:
+
+1. Deploy the app on an always-on server instead of a shop desktop.
+2. Change the Flask binding from `127.0.0.1` to the server's deployment configuration and run it behind a production WSGI server such as Waitress or Gunicorn.
+3. Point the domain's DNS record to the server and configure a reverse proxy such as Caddy or Nginx for HTTPS.
+4. Change the customer-facing URL shown to users from `/send` on localhost to the real HTTPS domain.
+5. Add login/authentication for the seller dashboard, rate limits, upload-size limits, and server-side access controls before making it public.
+6. Move temporary PDFs to private managed storage and keep the 30-minute cleanup job running even when no request arrives.
+
+Do not put printer access directly on the public server. A safer production design uses a private print agent at the shop that securely receives approved jobs from the hosted dashboard.
+
 ## Test
 
 ```powershell
